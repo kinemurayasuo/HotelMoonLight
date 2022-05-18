@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="com.spring.hotel.repository.HotelMemberMapper">
+	
+	<!-- 회원가입 -->
+	<insert id = "join" parameterType = "Member">
+	insert into
+    	hotel_member(
+        	member_id,
+	        member_pw,
+	        member_nm,
+	        member_tel,
+	        member_email
+        )
+		values(
+			#{memberId },
+			#{memberPw },
+			#{memberNm },
+			#{memberTel },
+			#{memberEmail }
+        )
+	</insert>
+	
+	<!-- 로그인 -->
+	<select id="selectMember" parameterType="Member" resultType="String">
+  		select
+  			member_Nm
+  		from	
+  			hotel_member
+  		where
+  			member_Id = #{memberId}
+  			<if test = "memberPw != null">
+  			and
+  			member_Pw = #{memberPw}
+  			</if>
+  	</select>	
+ 
+	<!-- ID 중복검사 -->
+	<select id = "idChk" parameterType = "String" resultType = "String">
+		select
+			member_Id as memberId
+		from
+			hotel_member
+		where
+			member_Id like #{idChk }
+	</select>
+	
+	<!-- 회원정보 수정 -->
+	<update id="updateMember" parameterType="Member">
+		update
+			hotel_member
+		set
+			member_nm = #{memberNm },
+			member_pw = #{memberPw },
+			member_email = #{memberEmail },
+			member_tel = #{memberTel }
+		where
+			member_id = #{memberId }
+	</update>
+	
+	
+	<!-- 회원 정보 수정 관련 sql -->
+	<select id="confirmPw" parameterType="Member" resultType="String">
+		select
+			member_nm
+		from
+			hotel_member
+		where
+			member_id = #{memberId }
+			and
+			member_pw = #{memberPw }
+	</select>
+	
+	<!-- 회원탈퇴 -->
+	<delete id="deleteMember" parameterType="Member">
+		delete from
+			hotel_member
+		where
+			member_id = #{memberId }
+			and
+			member_pw = #{memberPw }
+	</delete>
+	
+	 	
+  	<!-- 회원탈퇴 시 비밀번호 확인 -->
+	<select id="selectMemberPw" parameterType="String" resultType="String">
+		select
+			member_pw
+		from	
+			hotel_member
+		where
+			member_Id = #{memberId}
+  	</select>	
+	
+	<!-- 아이디 찾기 -->
+	<select id="memberFind" parameterType = "String" resultType="Member">
+		select 
+		member_id as memberId,
+		member_pw as memberPw	 
+		from hotel_member 
+		where member_email = #{memberEmail}
+	</select>
+</mapper>

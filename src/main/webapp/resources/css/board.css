@@ -1,0 +1,98 @@
+@charset "UTF-8";
+*{
+  margin: 0px;
+  padding: 0px;
+  text-decoration: none;
+  font-family:sans-serif;
+}
+
+.form
+{
+  padding: 30px, 20px;
+  background-color:#FFFFFF;
+  text-align:center;
+  top:50%;
+  left:50%;
+  border-radius: 15px;
+}
+.table
+{
+ 	border:2px solid #000;
+    border-radius:50px 40px 20px 10px;
+}
+
+body 
+{
+  background-color: #000000;
+}
+
+.td1
+{
+  width:100px;
+  height:60x;
+  text-align:center;
+  background-color:khaki;
+}
+
+.td2
+{
+  width:100px;
+  height:60px;
+  text-align:center;
+  background-color:khaki;
+}
+
+.td3
+{
+  width:1000px;
+  height:1000px;
+  border:none;
+  outline:none;
+  color: #636e72;
+  font-size:16px;
+  height:20px;
+  background: none;
+}
+
+.td4
+{
+  width:1000px;
+  height:1000px;
+  border:none;
+  outline:none;
+  color: #636e72;
+  font-size:16px;
+  height:300px;
+  background: none;
+}
+
+.textForm
+{
+  
+  padding: 30px, 20px;
+  background-color:#FFFFFF;
+  text-align:center;
+  top:50%;
+  left:50%;
+  border-radius: 15px;
+}
+
+.mainBox h3
+{
+	text-align : center;
+}
+
+
+.btn1
+{
+	top:50%;
+    left:50%;
+    border: 1px solid lightgrey;
+    color: black;
+    border-radius: 4px;
+    padding: 2px 8px;
+    font-soze: 18px;
+    text-align : center;
+    cursor:pointer;
+    border-radius: 15px;
+}

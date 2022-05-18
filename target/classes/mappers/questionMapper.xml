@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+ <mapper namespace ="com.spring.hotel.repository.QuestionListMapper">
+	
+	<!-- 전체 게시글 수 -->
+	<select id = "getTotalRecordsCount" resultType = "int">
+ 		select
+ 			count(*)
+ 		from
+ 			question_list	
+ 	</select>
+ 	
+ 	<!-- 검색 게시글 수 -->
+	<select id = "getTotalSearchRecordsCount" parameterType = "hashmap" resultType = "int">
+		select
+			count(*)
+		from
+			question_list	
+	   	<where>
+   		<if test = "searchType == 'questionTitle'">
+   			list_title like '%'||#{searchWord }||'%'
+   		</if>
+   		
+   		<if test = "searchType == 'questionContent'">
+   			list_content like '%'||#{searchWord } ||'%'
+   		</if>
+   		
+   		<if test = "searchType == 'memberNm'">
+   			member_nm like '%'||#{searchWord }||'%'
+   		</if>
+   	</where>
+ 	</select>
+ 	
+ 	<!-- 게시글 검색 -->
+ 	<select id = "searchQuestion" parameterType = "hashmap" resultType = "Question">
+ 	select
+		 qt.list_Num as listNum
+         ,qt.member_Nm as memberNm
+         ,qt.list_Title as listTitle
+         ,qt.list_Content as listContent
+         ,to_char(list_Date,'yyyy-MM-dd') as listDate
+		from
+   			question_list qt
+		<where>
+		<if test = "searchType == 'questionTitle'">
+   			list_title like '%'||#{searchWord }||'%'
+   		</if>
+   		
+   		<if test = "searchType == 'questionContent'">
+   			list_content like '%'||#{searchWord } ||'%'
+   		</if>
+   		
+   		<if test = "searchType == 'memberNm'">
+   			member_nm like '%'||#{searchWord }||'%'
+   		</if>
+	   	</where>
+		order by list_num desc
+ 	</select>
+ 	
+ 	
+	
+   <!-- 페이징 및 게시글 불러오기-->
+   <select id = "getQuestionList" parameterType = "HashMap" resultType = "Question">
+		select
+		 qt.list_Num as listNum
+         ,qt.member_Nm as memberNm
+         ,qt.list_Title as listTitle
+         ,qt.list_Content as listContent
+         ,to_char(list_Date,'yyyy-MM-dd') as listDate
+		from
+   			question_list qt,
+			(select
+				rownum as rn,
+				list_num as ln
+    		from
+				question_list
+			order by
+				list_num desc) rt
+		where
+			qt.list_num = rt.ln
+		and
+			rt.rn between #{startRecord } + 1 and #{startRecord } + #{countPerPage }
+		order by list_num desc
+	</select>
+   
+   <!-- 글 쓰기 -->
+   <insert id = "insertList" parameterType = "Question">
+   insert into
+           Question_list
+           (
+              list_Num,
+              member_Id,
+              member_Nm,
+              list_Title,
+              list_Content
+              <if test = "savedFilename != null">
+ 			, original_filename
+ 			, saved_filename
+ 			  </if>
+           )
+           values
+           (
+              Question_list_seq.nextval,
+              #{memberId },
+              #{memberNm },
+              #{listTitle },
+              #{listContent }
+              <if test = "savedFilename != null">
+ 			, #{originalFilename }
+ 			, #{savedFilename }
+ 			</if>
+           )
+   </insert>   
+
+	<!-- 게시글 읽기 -->
+  	<select id="selectQuestion" resultType="Question" parameterType="int">
+		select
+			list_Num as listNum,
+			member_Id as memberId,
+			member_Nm as memberNm,
+			list_Title as listTitle,
+			list_Content as listContent,
+			to_char(list_Date,'yyyy-MM-dd') as listDate, 
+			original_filename as originalFilename,
+ 			saved_filename as savedFilename
+		from 
+			Question_list
+		where
+			list_Num = #{listNum }	
+	</select>
+	
+	<!-- 글 수정  -->
+ 	<update id="updateList" parameterType="Question">
+  		update
+			Question_list
+		set
+			list_title = #{listTitle},
+			list_content = #{listContent}
+              <if test = "savedFilename != null">
+ 			, original_filename = #{originalFilename}
+ 			, saved_filename = #{savedFilename}
+ 			  </if>
+ 			  <if test = "savedFilename == null">
+ 			, original_filename = null
+ 			, saved_filename = null
+ 			  </if>
+		where
+			list_num = #{listNum}
+			and
+			member_Nm = #{memberNm}
+	</update>
+  	
+  	
+	<!-- 글 삭제 --> 
+  	<delete id="deleteQuestion" parameterType="int">
+	  	delete from
+	  		Question_list
+	  	where
+	  		list_Num = #{listNum }
+	</delete>
+	
+	
+	<delete id="deleteMemberQuestion" parameterType="String">
+	  	delete from
+	  		Question_list
+	  	where
+	  		member_id = #{memberId }
+	</delete>
+	
+	<!--댓글 보기-->
+ 	<select id="readAllReply" parameterType="int" resultType="Reply">
+	  	select
+	  		Reply_Num as replyNum,
+	  		Reply_Content as replyContent,
+	  		to_char(reply_Date, 'yy-MM-dd') as replyDate,
+	  		list_Num as listNum,
+	  		member_Nm as memberNm,
+	  		member_Id as memberId
+	  	from
+	  		reply
+	  	where
+	  		list_Num = #{listNum }
+	  	order by
+	  		Reply_Num
+	  </select>
+	  
+	<!--댓글 쓰기-->
+  	<insert id="replyWrite" parameterType="Reply">
+		insert into
+  			reply(
+  				reply_num,
+                Reply_Content,
+                list_Num,
+  				member_Nm,
+  				member_Id
+  			)values(
+  				reply_seq.nextval,
+                #{replyContent},
+                #{listNum},
+  				#{memberNm},
+  				#{memberId}
+  			)
+  	</insert>
+  	
+	<!--댓글 삭제-->
+		<delete id="deleteReply" parameterType="int">
+	  		delete from
+	  			reply
+	  		where
+	  			reply_Num = #{replyNum }
+	  </delete>
+	  
+	  <delete id="deleteMemberReply" parameterType="String">
+	  		delete from
+	  			reply
+	  		where
+	  			member_id = #{memberId }
+	  </delete>
+	  
+	 <!-- 글-댓글 삭제 -->
+	 <delete id="deleteQuestionReply" parameterType="int">
+	 	delete from
+	  		reply
+	  	where
+	  		list_Num = #{listNum }
+	  </delete>
+	  
+	<!--댓글 수정 -->
+	<update id="updateReply" parameterType="Reply">
+	 	update
+	  		reply
+	  	set
+	  		reply_Content = #{replyContent },
+	  		reply_Date = DEFAULT
+	  	where
+	  		reply_Num = #{replyNum }
+	 </update>
+	 
+	 	
+ </mapper>

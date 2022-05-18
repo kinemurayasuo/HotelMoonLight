@@ -1,0 +1,45 @@
+	.table-wrapper {
+		-webkit-overflow-scrolling: touch;
+	}
+
+	table {
+		margin: 0;
+		width: 100%;
+			border-bottom:1px solid #444444;
+   		border-top: 1px solid #444444;
+   	
+   		border-collapse: collapse;
+		text-align: center;
+	}
+	
+	th {
+		color: #000000;
+    	border-bottom: 1px solid rgb(220, 220, 220);
+    	padding: 0.75em 0.75em 0.75em 0.75em;
+    	font-size: 1.5em;
+		font-weight: 500;
+    	text-align: center;
+    	border-collapse: collapse;
+  }
+  
+  	td{
+  		border-bottom: 1px solid rgb(220, 220, 220);
+    	padding: 0.75em 0.75em 0.75em 0.75em;
+    	font-size: 1.3em;
+    	border-collapse: collapse;
+  	}
+
+	table thead th{
+			border-bottom:1px solid #444444;
+	
+	}
+	
+	 	table thead tr:first-child {
+				background-color: rgb(234, 234, 234);
+			}
+ 		table tbody tr:nth-child(2n) {
+				background-color: ghostwhite;
+			}
+
+
+

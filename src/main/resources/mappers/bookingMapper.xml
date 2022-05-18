@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.spring.hotel.repository.BookingMapper">
+	
+	<!-- 예약  --> 
+	<insert id = "roomBooking" parameterType = "Booking">
+	insert into
+    	booking(
+    		booking_num,
+        	member_id,
+        	ROOM_TYPE,
+	        booking_START,
+	        booking_END,
+	        adult,
+	        child,
+	        booking_status
+        )
+		values(
+			booking_seq.nextval,
+			#{memberId },
+			#{roomType },
+			to_date(#{bookingStart },'mm/dd/yyyy'),
+			to_date(#{bookingEnd },'mm/dd/yyyy'),
+			#{adult },
+			#{child },
+			1
+        )
+	</insert>
+	
+	<!-- 방 개수 증가 -->
+	<update id="roomStatusUp" parameterType="String">
+		update
+			hotel_room
+		set
+			room_status = room_status + 1
+		where
+			room_type = #{roomType }
+	</update>
+	
+	<!-- 방 개수 감소 -->
+	<update id="roomStatusDown" parameterType="String">
+		update
+			hotel_room
+		set
+			room_status = room_status - 1
+		where
+			room_type = #{roomType }
+	</update>
+	
+	
+	<!-- 방 정보 가져오기 -->
+  	<select id="readRoom" resultType="Room" parameterType="String">
+		select
+			room_num as roomNum,
+			room_type as roomType,
+			room_price as roomPrice,
+			room_status as roomStatus
+		from 
+			hotel_room
+		where
+			room_type = #{roomType }	
+	</select>
+
+	<!-- 내 예약 조회 -->
+	<select id="selectMyList" parameterType="String" resultType="Booking">
+	    select
+			booking_num as bookingNum,
+			member_id as memberId,
+	    	ROOM_TYPE as roomType,
+	    	to_char(booking_start, 'yy-MM-dd') as bookingStart,
+	    	to_char(booking_end, 'yy-MM-dd') as bookingEnd,
+	    	adult as adult,
+	    	child as child,
+	    	booking_status as bookingStatus,
+	    	booking_date as bookingDate
+	    from
+	    	booking
+	    where
+			member_id = #{memberId }
+	    order by
+	    	booking_Num desc
+	</select>
+	
+	<!-- 예약 취소 --> 
+	<update id="cancleBooking" parameterType="Booking">
+		update
+			booking
+		set
+			booking_status = '0'
+		where
+			member_id = #{memberId}
+			and
+			booking_num = #{bookingNum}
+	</update>
+	
+	<!-- 회원탈퇴 예약 취소 -->
+	 <delete id="deleteMemberBooking" parameterType="String">
+	 		delete from
+	 			booking
+	 		where
+	 			member_id = #{memberId }
+	 </delete>
+	
+</mapper>

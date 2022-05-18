@@ -1,0 +1,60 @@
+   #center {
+      margin-top: 50px;
+   }
+
+   .button {
+      border: 2px solid #903479;
+      background: #903479;
+      color: #fff;
+      font-size: 14px;
+      font-weight: 400;
+      white-space: nowrap;
+      padding: 8px 15px;
+   }
+   
+   table {
+      margin: auto;
+      width: 80%;
+      border:1px solid rgb(220, 220, 220);
+         border-collapse: collapse;
+      text-align: center;
+   }
+   
+   th {
+      background-color: #E6DDC4;
+      color: #000000;
+       border-bottom: 1px solid rgb(220, 220, 220);
+       padding: 0.75em 0.75em 0.75em 0.75em;
+       font-size: 1.5em;
+      font-weight: 800;
+       text-align: center;
+       border-collapse: collapse;
+     }
+   
+     td{
+        border-bottom: 1px solid rgb(220, 220, 220);
+       font-size: 1.3em;
+       border-collapse: collapse;
+       text-align: left;
+     }
+     
+     
+
+   table thead th{
+         border-bottom:1px solid rgb(220, 220, 220);
+   
+   }
+   
+    table thead tr:first-child {
+         background-color: rgb(234, 234, 234);
+   }
+   
+   table tbody tr:nth-child(2n) {
+      background-color: ghostwhite;
+   }
+
+   .table-wrapper {
+      -webkit-overflow-scrolling: touch;
+      overflow-x: auto;
+   }
+   
